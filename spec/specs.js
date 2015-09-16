@@ -1,7 +1,19 @@
+describe('Object', function() {
+  it('returns string representation of Player', function() {
+    var testPlayer = new Player("X");
+    expect(testPlayer.stringify()).to.equal('{"mark":"X"}'); 
+  });
+
+  it('returns string representation of Space', function() {
+    var testPlayer = new Space(0, 0);
+    expect(testPlayer.stringify()).to.equal('{"x":0,"y":0,"player":{}}');
+  });
+});
+
 describe('Player', function(){
   it('returns the player\'s mark', function() {
     var testPlayer = new Player("X");
-    expect(testPlayer.playerMark()).to.equal("X");
+    expect(testPlayer.mark).to.equal("X");
   });
 });
 
@@ -55,12 +67,25 @@ describe("Game", function() {
     expect(testGame.board.find(0, 0).player).to.eql(testPlayer);
   });
 
-  it("can tell which player's turn it is", function () {
+  it("can tell which player's turn it is", function() {
     var testPlayer = new Player("X");
     var testPlayer1 = new Player("O");
     var testGame = new Game();
     expect(testGame.turn()).to.eql(testPlayer);
     testGame.move(testPlayer, testGame.board.find(0, 1));
     expect(testGame.turn()).to.eql(testPlayer1);
+  });
+
+  it("can tell if game is over", function() {
+    var testPlayer = new Player("X");
+    var testPlayer1 = new Player("O");
+    var testGame = new Game();
+    expect(testGame.isOver()).to.equal(false);
+    testGame.move(testPlayer, testGame.board.find(0, 0));
+    testGame.move(testPlayer1, testGame.board.find(1, 2));
+    testGame.move(testPlayer, testGame.board.find(1, 0));
+    testGame.move(testPlayer1, testGame.board.find(2, 1));
+    testGame.move(testPlayer, testGame.board.find(2, 0));
+    expect(testGame.isOver()).to.equal(true);
   });
 });
