@@ -23,3 +23,17 @@ describe("Board", function() {
     expect(testBoard.find(1, 2)).to.eql(testSpace);
   });
 });
+
+describe("Game", function() {
+  it("creates two players to start the game", function() {
+    var testPlayer = new Player("X");
+    var testPlayer1 = new Player("O");
+    var testGame = new Game();
+    expect(testGame.players).to.eql([testPlayer, testPlayer1])
+  });
+  it("creates a board to start the game", function() {
+    var testBoard = new Board();
+    var testGame = new Game();
+    expect(testGame.board).to.eql(testBoard)
+  });
+});

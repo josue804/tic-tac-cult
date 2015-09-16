@@ -38,3 +38,9 @@ Board.prototype.find = function(x, y) {
   });
   return foundSpace;
 }
+
+
+function Game() {
+  this.players = [new Player("X"), new Player("O")];
+  this.board = new Board();
+}
