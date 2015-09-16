@@ -9,6 +9,8 @@ Player.prototype.playerMark = function() {
 function Space(x, y) {
   this.x = x;
   this.y = y;
+
+  this.player = {};
 }
 
 Space.prototype.xCoord = function() {
@@ -17,6 +19,10 @@ Space.prototype.xCoord = function() {
 
 Space.prototype.yCoord = function() {
   return this.y;
+}
+
+Space.prototype.placePlayer = function(player) {
+  this.player = player;
 }
 
 function Board() {
@@ -43,4 +49,20 @@ Board.prototype.find = function(x, y) {
 function Game() {
   this.players = [new Player("X"), new Player("O")];
   this.board = new Board();
+  this.currentTurn = new Player ("X")
+}
+
+Game.prototype.move = function(player, space) {
+  var otherPlayer = {};
+  space.placePlayer(player);
+  this.players.forEach(function(thisPlayer) {
+    if (player !== thisPlayer) {
+      otherPlayer = thisPlayer;
+    }
+  });
+  this.currentTurn = otherPlayer;
+}
+
+Game.prototype.turn = function()  {
+  return this.currentTurn;
 }
