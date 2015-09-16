@@ -49,12 +49,36 @@ Board.prototype.find = function(x, y) {
 function Game() {
   this.players = [new Player("X"), new Player("O")];
   this.board = new Board();
-  this.currentTurn = new Player ("X")
+  this.currentTurn = new Player("X");
 }
 
-Game.prototype.move = function(player, space) {
+// Game.prototype.move = function(player, space) {
+//   var otherPlayer = {};
+//   space.placePlayer(player);
+//   this.players.forEach(function(thisPlayer) {
+//     if (player !== thisPlayer) {
+//       otherPlayer = thisPlayer;
+//     }
+//   });
+//   this.currentTurn = otherPlayer;
+// }
+
+function getSpace(index) {
+  var spaces = [new Space(0, 0),
+                new Space(0, 1),
+                new Space(0, 2),
+                new Space(1, 0),
+                new Space(1, 1),
+                new Space(1, 2),
+                new Space(2, 0),
+                new Space(2, 1),
+                new Space(2, 2)];
+  return spaces[index];
+}
+
+Game.prototype.move = function(player, index) {
   var otherPlayer = {};
-  space.placePlayer(player);
+  getSpace(index).placePlayer(player);
   this.players.forEach(function(thisPlayer) {
     if (player !== thisPlayer) {
       otherPlayer = thisPlayer;
@@ -68,10 +92,7 @@ Game.prototype.turn = function()  {
 }
 
 Game.prototype.isOver = function() {
-
   var gameOver = false;
-
-
   var playerX = new Player("X");
   var playerO = new Player("O");
   var winningCombos = [
@@ -100,3 +121,12 @@ Game.prototype.isOver = function() {
 
   return gameOver;
 }
+
+$(document).ready(function() {
+  var game = new Game();
+  $(".cell").click(function() {
+    var currentPlayer = game.turn();
+    game.move(currentPlayer, $(this).attr('id'));
+    $(this).text(currentPlayer.mark);
+  });
+});
