@@ -63,7 +63,9 @@ describe("Game", function() {
     var testPlayer = new Player("X");
     var testPlayer1 = new Player("O");
     var testGame = new Game();
-    testGame.move(testPlayer, testGame.board.find(0, 0));
+    testGame.move(testPlayer, 0);
+    console.log('found = ')
+    console.log(testGame.board.find(0, 0))
     expect(testGame.board.find(0, 0).player).to.eql(testPlayer);
   });
 
@@ -72,7 +74,7 @@ describe("Game", function() {
     var testPlayer1 = new Player("O");
     var testGame = new Game();
     expect(testGame.turn()).to.eql(testPlayer);
-    testGame.move(testPlayer, testGame.board.find(0, 1));
+    testGame.move(testPlayer, 1);
     expect(testGame.turn()).to.eql(testPlayer1);
   });
 
@@ -81,11 +83,11 @@ describe("Game", function() {
     var testPlayer1 = new Player("O");
     var testGame = new Game();
     expect(testGame.isOver()).to.equal(false);
-    testGame.move(testPlayer, testGame.board.find(0, 0));
-    testGame.move(testPlayer1, testGame.board.find(1, 2));
-    testGame.move(testPlayer, testGame.board.find(1, 0));
-    testGame.move(testPlayer1, testGame.board.find(2, 1));
-    testGame.move(testPlayer, testGame.board.find(2, 0));
+    testGame.move(testPlayer, 0);
+    testGame.move(testPlayer1, 5);
+    testGame.move(testPlayer, 3);
+    testGame.move(testPlayer1, 7);
+    testGame.move(testPlayer, 6);
     expect(testGame.isOver()).to.equal(true);
   });
 });

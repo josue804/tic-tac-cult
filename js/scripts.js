@@ -2,6 +2,12 @@ Object.prototype.stringify = function() {
   return JSON.stringify(this);
 }
 
+Array.prototype.contains = function(array) {
+  return this.filter(function (elem) {
+    return array.indexOf(elem) > -1;
+  }).length == array.length
+}
+
 function Player(mark) {
   this.mark = mark;
 }
@@ -63,22 +69,23 @@ function Game() {
 //   this.currentTurn = otherPlayer;
 // }
 
-function getSpace(index) {
-  var spaces = [new Space(0, 0),
-                new Space(0, 1),
-                new Space(0, 2),
-                new Space(1, 0),
-                new Space(1, 1),
-                new Space(1, 2),
-                new Space(2, 0),
-                new Space(2, 1),
-                new Space(2, 2)];
+function getSpace(board, index) {
+  var spaces = [board.find(0, 0),
+                board.find(0, 1),
+                board.find(0, 2),
+                board.find(1, 0),
+                board.find(1, 1),
+                board.find(1, 2),
+                board.find(2, 0),
+                board.find(2, 1),
+                board.find(2, 2)];
+
   return spaces[index];
 }
 
 Game.prototype.move = function(player, index) {
   var otherPlayer = {};
-  getSpace(index).placePlayer(player);
+  getSpace(this.board, index).placePlayer(player);
   this.players.forEach(function(thisPlayer) {
     if (player !== thisPlayer) {
       otherPlayer = thisPlayer;
@@ -100,9 +107,7 @@ Game.prototype.isOver = function() {
   ];
 
   var playerSpots = [[], []];
-
   for (var i = 0; i < this.board.spaces.length; i++) {
-
     var player = this.board.spaces[i].player;
     if (player.stringify() === '{"mark":"X"}') {
       playerSpots[0].push(i);
@@ -113,8 +118,8 @@ Game.prototype.isOver = function() {
   }
 
   winningCombos.forEach(function(combo) {
-    if (playerSpots[0].stringify() === combo.stringify() ||
-        playerSpots[1].stringify() === combo.stringify()) {
+    if (playerSpots[0].contains(combo) ||
+        playerSpots[1].contains(combo)) {
           gameOver = true;
     }
   });
@@ -124,9 +129,19 @@ Game.prototype.isOver = function() {
 
 $(document).ready(function() {
   var game = new Game();
+  var playNumber = 0;
+
   $(".cell").click(function() {
     var currentPlayer = game.turn();
-    game.move(currentPlayer, $(this).attr('id'));
+    var cell = $(this).attr('id');
+    game.move(currentPlayer, cell);
     $(this).text(currentPlayer.mark);
+
+    playNumber++;
+    if (game.isOver()) {
+      alert('Game Over. ' + currentPlayer.mark + ' wins!');
+    } else if (playNumber === 9) {
+      alert('Cats game; try again.')
+    }
   });
 });
