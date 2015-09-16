@@ -70,25 +70,23 @@ Game.prototype.turn = function()  {
 Game.prototype.isOver = function() {
 
   var gameOver = false;
-  var thisBoard = [];
-  // this.board.spaces.forEach(function(space) {
-  //   thisBoard.push(space.player);
-  // });
-  //
+
 
   var playerX = new Player("X");
   var playerO = new Player("O");
   var winningCombos = [
-    {0: playerX, 3: playerX, 6: playerX}
+    [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 4, 8], [2, 4, 6]
   ];
 
   var playerSpots = [[], []];
-  // var thisBoard = this.board;
-  for (var i = 0; i < this.board.length; i++) {
-    if (this.board.space.player.stringify() === '{"mark":"X"}') {
+
+  for (var i = 0; i < this.board.spaces.length; i++) {
+
+    var player = this.board.spaces[i].player;
+    if (player.stringify() === '{"mark":"X"}') {
       playerSpots[0].push(i);
     }
-    if (this.board.space.player.stringify() === '{"mark":"O"}') {
+    if (player.stringify() === '{"mark":"O"}') {
       playerSpots[1].push(i);
     }
   }
@@ -100,32 +98,5 @@ Game.prototype.isOver = function() {
     }
   });
 
-
-
-  // winningBoards.forEach(function(winningBoard) {
-  //   for(var i = 0; i < thisBoard.length; i++) {
-  //     if (thisBoard[i].stringify() !== winningBoard[i].stringify()) {
-  //       gameOver = false;
-  //     }
-  //   }
-  // });
   return gameOver;
 }
-
-
-
-// var players = [playerX, playerO];
-// var winningBoards = [];
-//
-// for(var i = 0; i < players.length; i++) {
-//   if (i = 0) {
-//     winningBoards.push([players[i], {}, {}, players[i], {}, players[i+1], players[i], players[i+1], {}]);
-//   } else {
-//     winningBoards.push([players[i], {}, {}, players[i], {}, players[i-1], players[i], players[i-1], {}]);
-//   }
-// }
-
-// var winningBoards = [
-//   [new Player("X"), {}, {}, new Player("X"), {}, new Player("O"), new Player("X"), new Player("O"), {}],
-//   [new Player("O"), {}, {}, new Player("O"), {}, new Player("X"), new Player("O"), new Player("X"), {}]
-//   ];

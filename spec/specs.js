@@ -1,7 +1,7 @@
 describe('Object', function() {
   it('returns string representation of Player', function() {
     var testPlayer = new Player("X");
-    expect(testPlayer.stringify()).to.equal('{"mark":"X"}'); 
+    expect(testPlayer.stringify()).to.equal('{"mark":"X"}');
   });
 
   it('returns string representation of Space', function() {
