@@ -200,7 +200,7 @@ $(document).ready(function() {
     var space = getSpace(game.board, cell);
 
     if (!space.clicked) {
-      $(this).text(currentPlayer.mark);
+      $(this).prepend('<img src="public/img/josue.jpg" id="josue"/>');
       game.changeTurns();
       game.move(currentPlayer, cell);
       spotsFilled.push(parseInt(cell));
@@ -215,7 +215,7 @@ $(document).ready(function() {
     });
 
     if (game.isOver() && gameOver !== true) {
-      alert('Game Over. ' + currentPlayer.mark + ' wins!');
+      alert('Game Over. Josue has defeated the evil!');
       gameOver = true;
     } else if (allClicked) {
       alert('Cats game; try again.')
@@ -229,7 +229,7 @@ $(document).ready(function() {
       var space = getSpace(game.board, bestMove);
       if (!space.clicked) {
 
-        $("#" + bestMove.toString()).text(currentPlayer.mark);
+        $("#" + bestMove.toString()).prepend('<img src="public/img/god.jpg" id="samuel"/>');
         game.changeTurns();
         game.move(currentPlayer, bestMove);
         spotsFilled.push(bestMove);
@@ -244,7 +244,7 @@ $(document).ready(function() {
       });
 
       if (game.isOver() && gameOver !== true) {
-        alert('Game Over. ' + currentPlayer.mark + ' wins!');
+        alert('Game Over. Samuel wins!');
         gameOver = true;
       } else if (allClicked) {
         alert('Cats game; try again.')
