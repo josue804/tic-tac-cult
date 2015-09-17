@@ -111,15 +111,88 @@ Game.prototype.isOver = function() {
   winningCombos.forEach(function(combo) {
     if (playerSpots[0].contains(combo) ||
         playerSpots[1].contains(combo)) {
-          gameOver = true;
+        gameOver = true;
     }
   });
 
   return gameOver;
 }
 
+Game.prototype.playerXSpots = function() {
+  var playerSpots = [[], []];
+  for (var i = 0; i < this.board.spaces.length; i++) {
+    console.log(this.board.spaces[i])
+    var player = this.board.spaces[i].player;
+    console.log(player);
+    if (player.stringify() === '{"mark":"X"}') {
+      playerSpots[0].push(i);
+    }
+    if (player.stringify() === '{"mark":"O"}') {
+      playerSpots[1].push(i);
+    }
+  }
+
+  return playerSpots[0];
+}
+
+Game.prototype.strategy = function(spotsFilled) {
+  // var spots = this.playerXSpots();
+
+  var playerX = new Player("X");
+  var playerO = new Player("O");
+  var winningCombos = [
+  [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 4, 8], [2, 4, 6]
+  ];
+
+  var playerSpots = [[], []];
+  for (var i = 0; i < this.board.spaces.length; i++) {
+    console.log(this.board.spaces[i])
+    var player = this.board.spaces[i].player;
+    console.log(player);
+    if (player.stringify() === '{"mark":"X"}') {
+      playerSpots[0].push(i);
+    }
+    if (player.stringify() === '{"mark":"O"}') {
+      playerSpots[1].push(i);
+    }
+  }
+
+  var winningMove = -1;
+  var index = 0;
+
+  winningCombos.forEach(function(combo) {
+    for(var j = 0; j < 9; ++j) {
+      playerSpots[0].push(j);
+      playerSpots[1].push(j);
+      if (playerSpots[0].contains(combo) && spotsFilled.indexOf(j) === -1) {
+        winningMove = j;
+      } else if(playerSpots[1].contains(combo) && spotsFilled.indexOf(j) === -1) {
+        winningMove = j;
+      }
+      index = playerSpots[0].indexOf(j);
+      playerSpots[0].splice(index, 1);
+      index = playerSpots[1].indexOf(j);
+      playerSpots[1].splice(index, 1);
+    }
+  });
+
+  if (winningMove === -1) {
+    do {
+      var randomMove = Math.floor(Math.random() * 9);
+    }
+    while(spotsFilled.indexOf(randomMove) !== -1 && spotsFilled.length !== 9) ;
+    return randomMove;
+  }
+  return winningMove;
+  //strategy here
+
+  //return best move
+}
+
 $(document).ready(function() {
   var game = new Game();
+  var spotsFilled = [];
+  var gameOver = false;
 
   $(".cell").click(function() {
     var currentPlayer = game.turn();
@@ -130,6 +203,7 @@ $(document).ready(function() {
       $(this).text(currentPlayer.mark);
       game.changeTurns();
       game.move(currentPlayer, cell);
+      spotsFilled.push(parseInt(cell));
     }
     space.clicked = true;
 
@@ -140,11 +214,43 @@ $(document).ready(function() {
       }
     });
 
-    if (game.isOver()) {
+    if (game.isOver() && gameOver !== true) {
       alert('Game Over. ' + currentPlayer.mark + ' wins!');
+      gameOver = true;
     } else if (allClicked) {
       alert('Cats game; try again.')
     }
+
+    if(gameOver !== true && allClicked !== true) {
+
+      var bestMove = game.strategy(spotsFilled);
+      debugger;
+      var currentPlayer = game.turn();
+      var space = getSpace(game.board, bestMove);
+      if (!space.clicked) {
+
+        $("#" + bestMove.toString()).text(currentPlayer.mark);
+        game.changeTurns();
+        game.move(currentPlayer, bestMove);
+        spotsFilled.push(bestMove);
+      }
+      space.clicked = true;
+
+      var allClicked = true;
+      game.board.spaces.forEach(function(space) {
+        if (!space.clicked) {
+          allClicked = false;
+        }
+      });
+
+      if (game.isOver() && gameOver !== true) {
+        alert('Game Over. ' + currentPlayer.mark + ' wins!');
+        gameOver = true;
+      } else if (allClicked) {
+        alert('Cats game; try again.')
+      }
+    }
+
   });
 });
 
