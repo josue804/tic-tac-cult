@@ -2,7 +2,7 @@
 
 ##### _Tic Tac Toe, 9/16/2015_
 
-#### By _**Kellen Kolbeck & Vaughn Dice**_
+#### By _**Kellen Kolbeck, Vaughn Dice, Ryan Heupler, Travis Crampton, Josue Valverde**_
 
 ## Description
 

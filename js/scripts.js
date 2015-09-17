@@ -193,7 +193,7 @@ $(document).ready(function() {
   var game = new Game();
   var spotsFilled = [];
   var gameOver = false;
-  var gameStart = (Math.floor(Math.random() * 9)).toString();
+  var gameStart = ["0", "2", "6", "8"];
   var computerFirst = false;
 
   $('#computerTurn').hover(
@@ -211,12 +211,14 @@ $(document).ready(function() {
   $("#computerTurn").click(function() {
     computerFirst = true;
     $("#computerTurn").hide();
-    $("#" + gameStart).click();
+    debugger;
+    $("#" + gameStart[Math.floor(Math.random()*gameStart.length)]).click();
   });
 
   $(".cell").click(function() {
     //PLAYER TURN
     $("#computerTurn").hide();
+    debugger;
     if(computerFirst === false) {
       var currentPlayer = game.turn();
       var cell = $(this).attr('id');
@@ -249,7 +251,11 @@ $(document).ready(function() {
     //COMPUTER TURN
     if(gameOver !== true && allClicked !== true) {
 
-      var bestMove = game.strategy(spotsFilled);
+      if(computerFirst === false) {
+        var bestMove = game.strategy(spotsFilled);
+      } else {
+        var bestMove = parseInt($(this).attr('id'));
+      }
       var currentPlayer = game.turn();
       var space = getSpace(game.board, bestMove);
       if (!space.clicked) {
@@ -272,7 +278,7 @@ $(document).ready(function() {
         alert('Game Over. Samuel wins!');
         gameOver = true;
       } else if (allClicked) {
-        alert('Cats game; try again.')
+        alert("It's a tie! Try again.")
       }
     }
 
