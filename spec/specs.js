@@ -6,7 +6,7 @@ describe('Object', function() {
 
   it('returns string representation of Space', function() {
     var testPlayer = new Space(0, 0);
-    expect(testPlayer.stringify()).to.equal('{"x":0,"y":0,"player":{}}');
+    expect(testPlayer.stringify()).to.equal('{"x":0,"y":0,"player":{},"clicked":false}');
   });
 });
 
@@ -64,8 +64,6 @@ describe("Game", function() {
     var testPlayer1 = new Player("O");
     var testGame = new Game();
     testGame.move(testPlayer, 0);
-    console.log('found = ')
-    console.log(testGame.board.find(0, 0))
     expect(testGame.board.find(0, 0).player).to.eql(testPlayer);
   });
 
@@ -74,7 +72,7 @@ describe("Game", function() {
     var testPlayer1 = new Player("O");
     var testGame = new Game();
     expect(testGame.turn()).to.eql(testPlayer);
-    testGame.move(testPlayer, 1);
+    testGame.changeTurns();
     expect(testGame.turn()).to.eql(testPlayer1);
   });
 

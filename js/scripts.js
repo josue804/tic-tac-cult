@@ -15,8 +15,8 @@ function Player(mark) {
 function Space(x, y) {
   this.x = x;
   this.y = y;
-
   this.player = {};
+  this.clicked = false;
 }
 
 Space.prototype.xCoord = function() {
@@ -58,17 +58,6 @@ function Game() {
   this.currentTurn = new Player("X");
 }
 
-// Game.prototype.move = function(player, space) {
-//   var otherPlayer = {};
-//   space.placePlayer(player);
-//   this.players.forEach(function(thisPlayer) {
-//     if (player !== thisPlayer) {
-//       otherPlayer = thisPlayer;
-//     }
-//   });
-//   this.currentTurn = otherPlayer;
-// }
-
 function getSpace(board, index) {
   var spaces = [board.find(0, 0),
                 board.find(0, 1),
@@ -84,14 +73,14 @@ function getSpace(board, index) {
 }
 
 Game.prototype.move = function(player, index) {
-  var otherPlayer = {};
-  getSpace(this.board, index).placePlayer(player);
-  this.players.forEach(function(thisPlayer) {
-    if (player !== thisPlayer) {
-      otherPlayer = thisPlayer;
-    }
-  });
-  this.currentTurn = otherPlayer;
+  var space = getSpace(this.board, index);
+  space.placePlayer(player);
+}
+
+Game.prototype.changeTurns = function() {
+  this.currentTurn = this.currentTurn.mark === 'X' ?
+    this.currentTurn = new Player("O") :
+    this.currentTurn = new Player("X");
 }
 
 Game.prototype.turn = function()  {
@@ -108,7 +97,9 @@ Game.prototype.isOver = function() {
 
   var playerSpots = [[], []];
   for (var i = 0; i < this.board.spaces.length; i++) {
+    console.log(this.board.spaces[i])
     var player = this.board.spaces[i].player;
+    console.log(player);
     if (player.stringify() === '{"mark":"X"}') {
       playerSpots[0].push(i);
     }
@@ -129,18 +120,29 @@ Game.prototype.isOver = function() {
 
 $(document).ready(function() {
   var game = new Game();
-  var playNumber = 0;
 
   $(".cell").click(function() {
     var currentPlayer = game.turn();
     var cell = $(this).attr('id');
-    game.move(currentPlayer, cell);
-    $(this).text(currentPlayer.mark);
+    var space = getSpace(game.board, cell);
 
-    playNumber++;
+    if (!space.clicked) {
+      $(this).text(currentPlayer.mark);
+      game.changeTurns();
+      game.move(currentPlayer, cell);
+    }
+    space.clicked = true;
+
+    var allClicked = true;
+    game.board.spaces.forEach(function(space) {
+      if (!space.clicked) {
+        allClicked = false;
+      }
+    });
+
     if (game.isOver()) {
       alert('Game Over. ' + currentPlayer.mark + ' wins!');
-    } else if (playNumber === 9) {
+    } else if (allClicked) {
       alert('Cats game; try again.')
     }
   });
