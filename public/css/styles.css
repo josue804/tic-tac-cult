@@ -1,9 +1,14 @@
 .cell {
   height: 70px;
   width: 70px;
-
-  margin: 0.5em;
+  border: solid black 2px;
+  margin: 0.1em;
   padding: 0.5em;
   background-color: tan;
   color: white;
+  width: 120px;
+  height: 120px;
+  font-size: 50px;
+  text-align: center;
+  color: black;
 }

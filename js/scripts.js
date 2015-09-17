@@ -147,3 +147,9 @@ $(document).ready(function() {
     }
   });
 });
+
+$(function() {
+  $("#restartGame").click(function(event) {
+    window.location.reload();
+  });
+});
