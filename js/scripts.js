@@ -193,38 +193,63 @@ $(document).ready(function() {
   var game = new Game();
   var spotsFilled = [];
   var gameOver = false;
+  var gameStart = (Math.floor(Math.random() * 9)).toString();
+  var computerFirst = false;
+
+  $('#computerTurn').hover(
+    function() {
+      var $this = $(this); // caching $(this)
+      $this.data('initialText', $this.text());
+      $this.text("Are you sure about this?");
+    },
+    function() {
+      var $this = $(this); // caching $(this)
+      $this.text($this.data('initialText'));
+    }
+  );
+
+  $("#computerTurn").click(function() {
+    computerFirst = true;
+    $("#computerTurn").hide();
+    $("#" + gameStart).click();
+  });
 
   $(".cell").click(function() {
-    var currentPlayer = game.turn();
-    var cell = $(this).attr('id');
-    var space = getSpace(game.board, cell);
+    //PLAYER TURN
+    $("#computerTurn").hide();
+    if(computerFirst === false) {
+      var currentPlayer = game.turn();
+      var cell = $(this).attr('id');
+      var space = getSpace(game.board, cell);
 
-    if (!space.clicked) {
-      $(this).prepend('<img src="public/img/josue.jpg" id="josue"/>');
-      game.changeTurns();
-      game.move(currentPlayer, cell);
-      spotsFilled.push(parseInt(cell));
-    }
-    space.clicked = true;
-
-    var allClicked = true;
-    game.board.spaces.forEach(function(space) {
       if (!space.clicked) {
-        allClicked = false;
+        $(this).prepend('<img src="public/img/josue.jpg" id="josue"/>');
+        game.changeTurns();
+        game.move(currentPlayer, cell);
+        spotsFilled.push(parseInt(cell));
       }
-    });
+      space.clicked = true;
 
-    if (game.isOver() && gameOver !== true) {
-      alert('Game Over. Josue has defeated the evil!');
-      gameOver = true;
-    } else if (allClicked) {
-      alert('Cats game; try again.')
+      var allClicked = true;
+      game.board.spaces.forEach(function(space) {
+        if (!space.clicked) {
+          allClicked = false;
+        }
+      });
+
+      if (game.isOver() && gameOver !== true) {
+        alert('Game Over. Josue has defeated the evil!');
+        gameOver = true;
+      } else if (allClicked) {
+        alert('Cats game; try again.')
+      }
+      gameStart = 4;
     }
 
+    //COMPUTER TURN
     if(gameOver !== true && allClicked !== true) {
 
       var bestMove = game.strategy(spotsFilled);
-      debugger;
       var currentPlayer = game.turn();
       var space = getSpace(game.board, bestMove);
       if (!space.clicked) {
@@ -250,6 +275,8 @@ $(document).ready(function() {
         alert('Cats game; try again.')
       }
     }
+
+    computerFirst = false;
 
   });
 });
